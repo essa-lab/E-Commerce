@@ -29,7 +29,10 @@ Route::get('/products/{id}', [ProductController::class, 'getProductById'])->midd
 Route::post('/order', [OrderController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/profile',[UserController::class,'getUser'])->middleware('auth:sanctum');
 Route::get('/user-order',[OrderController::class,'getOrders'])->middleware('auth:sanctum');
-
+Route::get('/all-orders',[OrderController::class,'index'])->middleware('cors');
+Route::get('/all-users',[UserController::class,'index'])->middleware('cors');
+Route::get('/orders/{orderId}', [OrderController::class, 'getOrderDetails'])->middleware('cors');
+Route::get('/is-admin', [UserController::class, 'isAdmin'])->middleware('auth:sanctum');
 Route::controller(AuthController::class)->group(function(){
 
     Route::post('/register', 'register');

@@ -7,6 +7,7 @@
         <li><router-link to="/cart">Cart</router-link></li>
         <li v-if="!isAuthenticated"><router-link to="/login">Login</router-link></li>
         <li v-if="isAuthenticated"><router-link to="/profile">Profile</router-link></li>
+        <li v-if="isAdmin"><router-link to="/dashboard">Dashboard</router-link></li>
 
     </ul>
     <button v-if="isAuthenticated" @click="logout">Logout</button>
@@ -29,7 +30,14 @@
 </template>
 <script>
 export default{
+    data() {
+    return {
+      isAdmin: false,
+    };
+  },
+
     name:'Layout',
+
     computed: {
     isAuthenticated() {
       const token = localStorage.getItem('token');
@@ -37,22 +45,27 @@ export default{
       return !!token;
       },
     },
-    method:{
-        logout() {
-            console.log("hello from logout")
-      this.$api
-        .post('/logout')
-        .then(response => {
-            console.log(response)
-          localStorage.removeItem('token');
-          window.location.href = '/';
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    mounted() {
+    this.fetchIsAdmin();
     },
+    methods: {
+  fetchIsAdmin() {
+    const token = localStorage.getItem('token');
+    axios.get(`http://127.0.0.1:8000/api/is-admin`,{
+            headers: {
+             'Authorization': `Bearer ${token}`
+             }
+            })
+      .then(response => {
+        this.isAdmin = response.data.is_admin;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },
+},
 
-    }
+
 };
 
 </script>

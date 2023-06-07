@@ -15,7 +15,11 @@ class OrderController extends Controller
         $orders = Order::where('user_id', $user->id)->get();
         return response()->json($orders);
     }
+    public function index(){
+        $orders = Order::all();
 
+        return response()->json($orders);
+    }
     public function store(Request $request)
     {
         // Retrieve the order data from the request
@@ -53,5 +57,11 @@ class OrderController extends Controller
          }
 
         return $total;
+    }
+    public function getOrderDetails($orderId){
+
+        $order = Order::with('products')->findOrFail($orderId);
+
+        return response()->json($order);
     }
 }
