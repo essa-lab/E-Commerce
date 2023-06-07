@@ -35,11 +35,11 @@
     methods: {
       register() {
         if (this.password !== this.confirmPassword) {
-          // Handle password mismatch error
+
           return;
         }
 
-        // Proceed with registration
+
         this.$api
           .post('/register', {
             name: this.name,
@@ -49,7 +49,7 @@
           .then(response => {
             const token = response.data.data.token;
             console.log(response.data.data.token);
-            localStorage.setItem('token', token); // Store the token
+            localStorage.setItem('token', token);
             this.$router.push('/');
           })
           .catch(error => {

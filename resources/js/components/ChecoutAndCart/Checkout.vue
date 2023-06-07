@@ -6,8 +6,6 @@
       <input type="text" id="shipping-address" v-model="shippingAddress" :class="{ 'is-invalid': shippingAddressError }">
       <span v-if="shippingAddressError" class="error-message">Please enter a valid shipping address.</span>
 
-      <!-- Add more form fields as needed -->
-
       <button type="submit">Place Order</button>
     </form>
   </template>
@@ -39,14 +37,11 @@
         ship:this.shippingAddress
          };
          const token = localStorage.getItem('token');
-         const response = await axios.post('/api/order',{
-            headers: {
+         axios.post('/api/order', orderData, {
+  headers: {
     'Authorization': `Bearer ${token}`
-  },orderData
-         });
-         console.log(response.data)
-
-
+  }
+})
             localStorage.removeItem('cart_items');
         } catch (error) {
 

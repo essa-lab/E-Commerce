@@ -35,9 +35,8 @@
       fetchProduct() {
         const productId = this.$route.params.productId;
         console.log(productId)
-        const url = `/api/products/${productId}`;
 
-        axios.get(url)
+        axios.get(`http://127.0.0.1:8000/api/products/${productId}`)
           .then(response => {
             this.product = response.data;
           })

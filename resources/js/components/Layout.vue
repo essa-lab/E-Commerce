@@ -34,7 +34,7 @@ export default{
     isAuthenticated() {
       const token = localStorage.getItem('token');
       console.log(localStorage.getItem('token'))
-      return !!token; // Convert token presence to boolean
+      return !!token;
       },
     },
     method:{
@@ -44,7 +44,7 @@ export default{
         .post('/logout')
         .then(response => {
             console.log(response)
-          localStorage.removeItem('token'); // Remove the token from storage
+          localStorage.removeItem('token');
           window.location.href = '/';
         })
         .catch(error => {

@@ -26,10 +26,9 @@ export default {
     fetchProducts() {
 
     const catId = this.$route.params.catId;
-    const url = `api/category-products/${catId}`;
 
          axios
-        .get(url)
+        .get(`http://127.0.0.1:8000/api/category-products/${catId}`)
         .then(response => {
             this.cProducts = response.data;
         })

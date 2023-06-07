@@ -8,7 +8,7 @@ use App\Models\User;
 class Order extends Model
 {
     use HasFactory;
-    protected $table = 'order';
+    protected $table = 'orders';
     protected $fillable = ['user_id','order_number','total_amount','shipping_address'];
     public function user(){
         return $this->belongsTo(User::class);

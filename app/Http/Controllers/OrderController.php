@@ -23,17 +23,23 @@ class OrderController extends Controller
         ]);
 
         // // Store the ordered products in the order_items table
-        // foreach ($orderData['items'] as $productData) {
-        //     $product = Product::findOrFail($productData->id);
-        //     $order->products()->attach($product, ['quantity' => $productData->quantity,'price'=>$productData->price]);
-        // }
+        foreach ($orderData['items'] as $productData) {
+            $product = Product::findOrFail($productData['id']);
+            $order->products()->attach($product, [
+                'quantity' => $productData['quantity'],
+            'price'=>$productData['price'],
+        ]);
+        }
 
         // // Return a response indicating the successful order creation
         return response()->json($order);
     }
     function generateUniqueOrderNumber()
 {
-    return uniqid(); // Example: Generate a unique ID as the order number
+    $timestamp = time();
+    $randomNumber = mt_rand(1000, 9999);
+
+    return $timestamp . $randomNumber;
 }
 function calculateTotalPrice(array $orderData)
 {
