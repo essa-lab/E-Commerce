@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
@@ -24,7 +25,10 @@ Route::get('/featuredproducts',[ProductController::class,'featureProducts'])->mi
 Route::get('/category-products/{category}', [ProductController::class, 'getProductsByCategory'])->middleware('cors');
 Route::get('/pp',[ProductController::class,'paginatedProducts'])->middleware('cors');
 Route::get('/products/{id}', [ProductController::class, 'getProductById'])->middleware('cors');
+
 Route::post('/order', [OrderController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/profile',[UserController::class,'getUser'])->middleware('auth:sanctum');
+Route::get('/user-order',[OrderController::class,'getOrders'])->middleware('auth:sanctum');
 
 Route::controller(AuthController::class)->group(function(){
 
