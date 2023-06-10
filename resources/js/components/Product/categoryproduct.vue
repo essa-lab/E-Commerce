@@ -30,7 +30,7 @@ export default {
          axios
         .get(`http://127.0.0.1:8000/api/category-products/${catId}`)
         .then(response => {
-            this.cProducts = response.data;
+            this.cProducts = response.data.data;
         })
         .catch(error => {
           console.log(error);

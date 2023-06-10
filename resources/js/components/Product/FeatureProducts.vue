@@ -26,7 +26,7 @@ export default {
       axios
         .get(`/api/featuredproducts`)
         .then(response => {
-            this.featuredProducts = response.data;
+            this.featuredProducts = response.data.data;
         })
         .catch(error => {
           console.log(error);

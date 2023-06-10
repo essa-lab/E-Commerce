@@ -42,13 +42,15 @@
 
         this.$api
           .post('/register', {
+
             name: this.name,
             email: this.email,
             password: this.password,
           })
           .then(response => {
+            this.$store.dispatch('login',[this.email])
             const token = response.data.data.token;
-            console.log(response.data.data.token);
+            localStorage.setItem('user',JSON.stringify(response.data.data));
             localStorage.setItem('token', token);
             this.$router.push('/');
           })

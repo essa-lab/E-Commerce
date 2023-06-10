@@ -29,7 +29,7 @@
       fetchUsers() {
         axios.get('/api/all-users')
           .then(response => {
-            this.users = response.data;
+            this.users = response.data.data;
           })
           .catch(error => {
             console.error(error);

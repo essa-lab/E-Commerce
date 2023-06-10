@@ -29,40 +29,35 @@
   </footer>
 </template>
 <script>
+
+import { mapState} from 'vuex';
 export default{
-    data() {
-    return {
-      isAdmin: false,
-    };
+
+    computed: {
+    ...mapState(['user']),
+    user() {
+      return this.$store.state.user;
+    },
+    isAuthenticated() {
+      return this.$store.getters.isAuth;
+    },
+    isAdmin(){
+           const storedUser = JSON.parse(localStorage.getItem('user'))
+           console.log(storedUser)
+            if(storedUser){
+                return storedUser.isAdmin;
+            }
+            return false;
+        }
   },
 
     name:'Layout',
-
-    computed: {
-    isAuthenticated() {
-      const token = localStorage.getItem('token');
-      console.log(localStorage.getItem('token'))
-      return !!token;
-      },
-    },
-    mounted() {
-    this.fetchIsAdmin();
-    },
     methods: {
-  fetchIsAdmin() {
-    const token = localStorage.getItem('token');
-    axios.get(`http://127.0.0.1:8000/api/is-admin`,{
-            headers: {
-             'Authorization': `Bearer ${token}`
-             }
-            })
-      .then(response => {
-        this.isAdmin = response.data.is_admin;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  },
+        logout(){
+            this.$store.dispatch('logout')
+            window.location.href = '/';
+        },
+
 },
 
 

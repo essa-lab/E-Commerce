@@ -19859,9 +19859,9 @@ __webpack_require__.r(__webpack_exports__);
     fetchCategories: function fetchCategories() {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_1___default().get("http://127.0.0.1:8000/api/categories").then(function (response) {
-        _this.allCategories = response.data;
+        _this.allCategories = response.data.data;
       })["catch"](function (error) {
-        console.error("Error:", error);
+        console.error(error);
       });
     }
   }
@@ -20021,36 +20021,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  data: function data() {
-    return {
-      isAdmin: false
-    };
-  },
-  name: 'Layout',
-  computed: {
+  computed: _objectSpread(_objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)(['user'])), {}, {
+    user: function user() {
+      return this.$store.state.user;
+    },
     isAuthenticated: function isAuthenticated() {
-      var token = localStorage.getItem('token');
-      console.log(localStorage.getItem('token'));
-      return !!token;
+      return this.$store.getters.isAuth;
+    },
+    isAdmin: function isAdmin() {
+      var storedUser = JSON.parse(localStorage.getItem('user'));
+      console.log(storedUser);
+      if (storedUser) {
+        return storedUser.isAdmin;
+      }
+      return false;
     }
-  },
-  mounted: function mounted() {
-    this.fetchIsAdmin();
-  },
+  }),
+  name: 'Layout',
   methods: {
-    fetchIsAdmin: function fetchIsAdmin() {
-      var _this = this;
-      var token = localStorage.getItem('token');
-      axios.get("http://127.0.0.1:8000/api/is-admin", {
-        headers: {
-          'Authorization': "Bearer ".concat(token)
-        }
-      }).then(function (response) {
-        _this.isAdmin = response.data.is_admin;
-      })["catch"](function (error) {
-        console.error(error);
-      });
+    logout: function logout() {
+      this.$store.dispatch('logout');
+      window.location.href = '/';
     }
   }
 });
@@ -20085,7 +20085,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchOrders: function fetchOrders() {
       var _this = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('/api/all-orders').then(function (response) {
-        _this.orders = response.data;
+        _this.orders = response.data.data;
       })["catch"](function (error) {
         console.error(error);
       });
@@ -20121,7 +20121,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
       var orderId = this.$route.params.orderId;
       axios.get("http://127.0.0.1:8000/api/orders/".concat(orderId)).then(function (response) {
-        _this.order = response.data;
+        _this.order = response.data.data;
       })["catch"](function (error) {
         console.error(error);
       });
@@ -20160,7 +20160,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchProducts: function fetchProducts() {
       var _this = this;
       axios.get("/api/featuredproducts").then(function (response) {
-        _this.featuredProducts = response.data;
+        _this.featuredProducts = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -20202,9 +20202,9 @@ __webpack_require__.r(__webpack_exports__);
     fetchProducts: function fetchProducts(page) {
       var _this = this;
       axios.get("/api/pp?page=".concat(page)).then(function (response) {
-        _this.products = response.data.data;
-        _this.currentPage = response.data.current_page;
-        _this.totalPages = response.data.last_page;
+        _this.products = response.data.data.data;
+        _this.currentPage = response.data.data.current_page;
+        _this.totalPages = response.data.data.last_page;
         _this.generatePageNumbers();
       })["catch"](function (error) {
         console.log(error);
@@ -20246,12 +20246,14 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchProduct();
   },
   methods: {
+    getImageUrl: function getImageUrl(image) {
+      return "/storage/".concat(image);
+    },
     fetchProduct: function fetchProduct() {
       var _this = this;
       var productId = this.$route.params.productId;
-      console.log(productId);
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("http://127.0.0.1:8000/api/products/".concat(productId)).then(function (response) {
-        _this.product = response.data;
+        _this.product = response.data.data;
       })["catch"](function (error) {
         console.error(error);
       });
@@ -20291,7 +20293,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
       var catId = this.$route.params.catId;
       axios.get("http://127.0.0.1:8000/api/category-products/".concat(catId)).then(function (response) {
-        _this.cProducts = response.data;
+        _this.cProducts = response.data.data;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -20356,7 +20358,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm-bundler.js");
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapState)(['user'])),
   data: function data() {
     return {
       email: '',
@@ -20365,12 +20376,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     login: function login() {
+      var _this = this;
       this.$api.post('/login', {
         email: this.email,
         password: this.password
       }).then(function (response) {
-        console.log(response);
+        _this.$store.dispatch('login', [_this.email]);
         var token = response.data.data.token;
+        localStorage.setItem('user', JSON.stringify(response.data.data));
         localStorage.setItem('token', token);
         window.location.href = '/';
       })["catch"](function (error) {
@@ -20416,9 +20429,7 @@ __webpack_require__.r(__webpack_exports__);
           'Authorization': "Bearer ".concat(token)
         }
       }).then(function (response) {
-        console.log(response);
-        _this.user = response.data;
-        console.log(_this.user);
+        _this.user = response.data.data;
       })["catch"](function (error) {
         console.error('Failed to fetch user orders:', error);
       });
@@ -20431,7 +20442,7 @@ __webpack_require__.r(__webpack_exports__);
           'Authorization': "Bearer ".concat(token)
         }
       }).then(function (response) {
-        _this2.orders = response.data;
+        _this2.orders = response.data.data;
       })["catch"](function (error) {
         console.error('Failed to fetch user orders:', error);
       });
@@ -20472,8 +20483,9 @@ __webpack_require__.r(__webpack_exports__);
         email: this.email,
         password: this.password
       }).then(function (response) {
+        _this.$store.dispatch('login', [_this.email]);
         var token = response.data.data.token;
-        console.log(response.data.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.data));
         localStorage.setItem('token', token);
         _this.$router.push('/');
       })["catch"](function (error) {
@@ -20510,7 +20522,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchUsers: function fetchUsers() {
       var _this = this;
       axios.get('/api/all-users').then(function (response) {
-        _this.users = response.data;
+        _this.users = response.data.data;
       })["catch"](function (error) {
         console.error(error);
       });
@@ -20796,7 +20808,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_9];
     }),
     _: 1 /* STABLE */
-  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.isAdmin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+  })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $options.isAdmin ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     to: "/dashboard"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
@@ -20806,7 +20818,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   })])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), $options.isAuthenticated ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     onClick: _cache[0] || (_cache[0] = function () {
-      return _ctx.logout && _ctx.logout.apply(_ctx, arguments);
+      return $options.logout && $options.logout.apply($options, arguments);
     })
   }, "Logout")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("main", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_view)]), _hoisted_12], 64 /* STABLE_FRAGMENT */);
 }
@@ -21074,9 +21086,9 @@ var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return $data.product ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    src: $data.product.image,
+    src: $options.getImageUrl($data.product.image),
     alt: $data.product.title
-  }, null, 8 /* PROPS */, _hoisted_4)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.title), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.description), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.price), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.rating.rate), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.rating.count) + " Votes", 1 /* TEXT */)]), _hoisted_12])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
+  }, null, 8 /* PROPS */, _hoisted_4)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h1", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.title), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.description), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_8, "Price " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.price), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.rating.rate), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.product.rating.count) + " Votes", 1 /* TEXT */)]), _hoisted_12])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
 }
 
 /***/ }),
@@ -21741,11 +21753,16 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 
 var CART_ITEMS_KEY = 'cart_items';
+var USER_KEY = 'user';
 var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
   state: {
-    cartItems: JSON.parse(localStorage.getItem(CART_ITEMS_KEY)) || []
+    cartItems: JSON.parse(localStorage.getItem(CART_ITEMS_KEY)) || [],
+    user: JSON.parse(localStorage.getItem(USER_KEY)) || null
   },
   mutations: {
+    setUser: function setUser(state, user) {
+      state.user = user;
+    },
     addToCart: function addToCart(state, item) {
       var existingItem = state.cartItems.find(function (cartItem) {
         return cartItem.id === item.id;
@@ -21779,20 +21796,38 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
     }
   },
   actions: {
-    addToCart: function addToCart(_ref, item) {
+    login: function login(_ref, user) {
       var commit = _ref.commit;
+      commit('setUser', user);
+    },
+    logout: function logout(_ref2) {
+      var commit = _ref2.commit;
+      commit('setUser', null);
+      localStorage.removeItem(USER_KEY);
+    },
+    addToCart: function addToCart(_ref3, item) {
+      var commit = _ref3.commit;
       commit('addToCart', item);
     },
-    removeFromCart: function removeFromCart(_ref2, index) {
-      var commit = _ref2.commit;
+    removeFromCart: function removeFromCart(_ref4, index) {
+      var commit = _ref4.commit;
       commit('removeFromCart', index);
     },
-    clearCart: function clearCart(_ref3) {
-      var commit = _ref3.commit;
+    clearCart: function clearCart(_ref5) {
+      var commit = _ref5.commit;
       commit('clearCart');
     }
   },
   getters: {
+    currentUser: function currentUser(state) {
+      return state.user;
+    },
+    isAuth: function isAuth(state) {
+      if (state.user) {
+        return true;
+      }
+      return false;
+    },
     cartItemsCount: function cartItemsCount(state) {
       var count = 0;
       var _iterator = _createForOfIteratorHelper(state.cartItems),
@@ -21833,38 +21868,7 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_0__.createStore)({
       return totalPrice;
     }
   }
-  //   mutations: {
-  //     addToCart(state, item) {
-  //       state.cartItems.push(item);
-  //       localStorage.setItem(CART_ITEMS_KEY, JSON.stringify(state.cartItems));
-  //     },
-  //     removeFromCart(state, itemIndex) {
-  //       state.cartItems.splice(itemIndex, 1);
-  //       localStorage.setItem(CART_ITEMS_KEY, JSON.stringify(state.cartItems));
-  //     },
-  //     clearCart(state) {
-  //       state.cartItems = [];
-  //       localStorage.removeItem(CART_ITEMS_KEY);
-  //     },
-  //   },
-  //   actions: {
-  //     addToCart({ commit }, item) {
-  //       commit('addToCart', item);
-  //     },
-  //     removeFromCart({ commit }, itemIndex) {
-  //       commit('removeFromCart', itemIndex);
-  //     },
-  //     clearCart({ commit }) {
-  //       commit('clearCart');
-  //     },
-  //   },
-  //   getters: {
-  //     cartItemsCount: (state) => {
-  //       return state.cartItems.length;
-  //     },
-  //   },
 });
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (store);
 
 /***/ }),

@@ -50,7 +50,7 @@ export default {
 
       axios.get(`http://127.0.0.1:8000/api/orders/${orderId}`)
         .then(response => {
-          this.order = response.data;
+          this.order = response.data.data;
         })
         .catch(error => {
           console.error(error);

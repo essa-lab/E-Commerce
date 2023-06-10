@@ -35,7 +35,7 @@
       fetchOrders() {
         axios.get('/api/all-orders')
           .then(response => {
-            this.orders = response.data;
+            this.orders = response.data.data;
           })
           .catch(error => {
             console.error(error);

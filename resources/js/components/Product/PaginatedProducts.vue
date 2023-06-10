@@ -38,9 +38,9 @@ export default {
       axios
         .get(`/api/pp?page=${page}`)
         .then(response => {
-          this.products = response.data.data;
-          this.currentPage = response.data.current_page;
-          this.totalPages = response.data.last_page;
+          this.products = response.data.data.data;
+          this.currentPage = response.data.data.current_page;
+          this.totalPages = response.data.data.last_page;
           this.generatePageNumbers();
         })
         .catch(error => {

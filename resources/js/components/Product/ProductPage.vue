@@ -2,12 +2,12 @@
 <div v-if="product" class="product-page">
     <div class="product-container">
       <div class="product-image">
-        <img :src="product.image" :alt="product.title" />
+        <img :src="getImageUrl(product.image)" :alt="product.title" />
       </div>
       <div class="product-details">
         <h1 class="product-title">{{ product.title }}</h1>
         <p class="product-description">{{ product.description }}</p>
-        <p class="product-price">{{ product.price }}</p>
+        <p class="product-price">Price {{ product.price }}</p>
         <div class="rating-container">
           <span class="rating">{{product.rating.rate}}</span>
           <span class="votes">{{product.rating.count}} Votes</span>
@@ -32,13 +32,14 @@
       this.fetchProduct();
     },
     methods: {
+        getImageUrl(image) {
+             return `/storage/${image}`;
+        },
       fetchProduct() {
         const productId = this.$route.params.productId;
-        console.log(productId)
-
         axios.get(`http://127.0.0.1:8000/api/products/${productId}`)
           .then(response => {
-            this.product = response.data;
+            this.product = response.data.data;
           })
           .catch(error => {
             console.error(error);

@@ -17,7 +17,11 @@
   </template>
 
   <script>
+import { mapState} from 'vuex';
   export default {
+    computed:{
+        ...mapState(['user']),
+    },
     data() {
       return {
         email: '',
@@ -33,8 +37,9 @@
             password: this.password,
           })
           .then(response => {
-            console.log(response)
+            this.$store.dispatch('login',[this.email])
             const token = response.data.data.token;
+            localStorage.setItem('user',JSON.stringify(response.data.data));
             localStorage.setItem('token', token);
             window.location.href = '/';
           })

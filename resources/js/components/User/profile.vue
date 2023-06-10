@@ -42,10 +42,7 @@ import axios from "axios";
              }
             })
           .then((response) => {
-            console.log(response)
-            this.user = response.data;
-            console.log(this.user)
-
+            this.user = response.data.data;
           })
 
           .catch((error) => {
@@ -61,7 +58,7 @@ import axios from "axios";
              }
             })
           .then((response) => {
-            this.orders = response.data;
+            this.orders = response.data.data;
           })
           .catch((error) => {
             console.error('Failed to fetch user orders:', error);

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Validator;
-class AuthController extends Controller
+class AuthController extends ApiController
 {
 
     public function register(Request $request){
@@ -16,7 +17,7 @@ class AuthController extends Controller
             'password'=>'required',
         ]);
         if($validator->fails()){
-            return $this->sendError('Validation Error',$validator->errors());
+            return $this->sendErrorResponse('Validation Error',$validator->errors(),Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $input = $request->all();
@@ -36,57 +37,34 @@ class AuthController extends Controller
      *
      */
     public function login(Request $request){
+        $validator = Validator::make($request->all(),[
+            'email'=>'required|email',
+            'password'=>'required'
+        ]);
+        if($validator->fails()){
+            return $this->sendErrorResponse('Validation Error',$validator->errors(),Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
             $user = Auth::user();
             $success['token'] =  $user->createToken('Test')->plainTextToken;
             $success['name'] =  $user->name;
+            $success['isAdmin']=$user->is_admin;
 
-            return $this->sendResponse($success, 'User login successfully.');
+            return $this->sendResponse($success, 'User login successfully.',Response::HTTP_OK);
         }
         else{
-            return $this->sendError("Unauthorised",['error'=>'Unauthorised']);
+            return $this->sendErrorResponse("Unauthorised",['error'=>'Unauthorised'],Response::HTTP_UNAUTHORIZED);
         }
     }
 
-    public function logout()
-    {
-    Auth::guard('api')->logout();
-
-    return $this->sendResponse([], 'User logged off successfully.');
-    }
-
-    //
-    public function sendResponse($result, $message){
-
-    	$response = [
-            'success' => true,
-            'data'    => $result,
-            'message' => $message,
-        ];
-
-        return response()->json($response, 200);
-    }
-
-
-    /**
-     * return error response.
-     *
-     * @return \Illuminate\Http\Response
-     */
-
-    public function sendError($error, $errorMessages = [], $code = 404){
-
-    	$response = [
-            'success' => false,
-            'message' => $error,
-
-        ];
-
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
+    public function logout(){
+        try{
+            Auth::guard('api')->logout();
+            return $this->sendResponse([],'User Logger Off Successfully',Response::HTTP_OK);
+        }catch(\Exception $e){
+            $this->sendErrorResponse("Logout Faild",$e->getMessage(),Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return response()->json($response, $code);
     }
 
 }
