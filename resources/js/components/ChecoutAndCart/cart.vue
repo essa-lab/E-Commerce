@@ -20,6 +20,7 @@
         </div>
         <p class="cart-total">Cart Total: ${{ cartTotalPrice }}</p>
       </div>
+      <router-link :to="`/order`" class="checkout">CheckOut</router-link>
     </div>
   </template>
 
@@ -108,5 +109,12 @@ h2 {
   margin-top: 20px;
   padding-top: 10px;
   border-top: 1px solid #ccc;
+}
+.checkout{
+    background: aqua;
+padding: 10px;
+border-radius: 10%;
+position: relative;
+bottom: 20px;
 }
 </style>

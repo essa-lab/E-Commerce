@@ -1,10 +1,10 @@
 <template>
     <div class="sidebar">
       <ul>
-        <li><router-link to="/dashboard/products" exact>Products</router-link></li>
-        <li><router-link to="/dashboard/categories" exact>Categories</router-link></li>
-        <li><router-link to="/dashboard/all-orders" exact>Orders</router-link></li>
-        <li><router-link to="/dashboard/all-users" exact>Users</router-link></li>
+        <li><router-link to="/dashboard/products" >Products</router-link></li>
+        <li><router-link to="/dashboard/categories" >Categories</router-link></li>
+        <li><router-link to="/dashboard/all-orders" >Orders</router-link></li>
+        <li><router-link to="/dashboard/all-users" >Users</router-link></li>
       </ul>
     </div>
   </template>

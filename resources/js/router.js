@@ -15,6 +15,20 @@ import dashboard from './components/Dashboard.vue'
 import Order from './components/Order.vue'
 import User from './components/user.vue'
 import OrderDetails from './components/OrderDetails.vue'
+
+import store from './store';
+
+const isAuth=()=>{
+    return store.getters.isAuth;
+}
+
+const isAdmin=()=>{
+        const storedUser = JSON.parse(localStorage.getItem('user'))
+         if(storedUser){
+             return storedUser.isAdmin;
+         }
+         return false;
+}
 const routes = [
     { path: '/', component:()=> Home },
     {path :'/cart',component:()=>cart},
@@ -24,9 +38,28 @@ const routes = [
 
     { path: '/products/:productId', component:()=> productPage },
     { path: '/login', component:()=> login },
-    {path : '/profile',component:()=>profile},
+
+    {path : '/profile',component:()=>profile,
+     beforeEnter: (to, from, next) => {
+        if (!isAuth()) {
+          next('/login');
+        } else {
+          next();
+        }
+      },
+    },
+
     {path:'/register',component:()=>register},
-    {path:'/order',component:()=>checkout},
+
+    {path:'/order',component:()=>checkout,
+    beforeEnter: (to, from, next) => {
+        if (!isAuth()) {
+          next('/login');
+        } else {
+          next();
+        }
+      },
+    },
 
     {path: '/dashboard',
     component:()=> dashboard,
@@ -37,6 +70,13 @@ const routes = [
       { path: 'all-users', component: User },
       {path: '/orders/:orderId', component: OrderDetails,}
     ],
+    beforeEnter: (to, from, next) => {
+        if (!isAdmin()) {
+          next('/');
+        } else {
+          next();
+        }
+      },
   },
 ];
 

@@ -43,7 +43,6 @@ export default{
     },
     isAdmin(){
            const storedUser = JSON.parse(localStorage.getItem('user'))
-           console.log(storedUser)
             if(storedUser){
                 return storedUser.isAdmin;
             }
